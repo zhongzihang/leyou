@@ -19,6 +19,15 @@ public class BrandService {
     @Autowired
     private BrandMapper brandMapper;
 
+    /**
+     * 查询品牌，返回结果集
+     * @param key
+     * @param page
+     * @param rows
+     * @param sortBy
+     * @param desc
+     * @return
+     */
     public PageResult<Brand> queryBrandsByPage(String key, Integer page, Integer rows,String sortBy, Boolean desc){
 
         // 初始化example对象
@@ -43,5 +52,16 @@ public class BrandService {
         PageInfo<Brand> pageInfo = new PageInfo<>(brands);
         // 包装成分页结果集返回
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    public void saveBrand(Brand brand,List<Long>cids){
+        //先新增品牌
+        this.brandMapper.insertSelective(brand);
+
+        //再新增中间表
+        cids.forEach(cid -> {
+            this.brandMapper.insertCategoryAndBrand(cid, brand.getId());
+        });
+
     }
 }
