@@ -64,4 +64,13 @@ public class BrandService {
         });
 
     }
+
+    /**
+     * 根据cid查询品牌
+     * @param cid
+     * @return
+     */
+    public List<Brand> queryBrandsByCid(Long cid) {
+        return this.brandMapper.selectBrandByCid(cid);
+    }
 }

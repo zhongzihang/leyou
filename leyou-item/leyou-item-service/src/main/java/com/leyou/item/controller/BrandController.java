@@ -18,11 +18,12 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    @GetMapping("page")
+
 
     /**
      * 根据分页查询
      */
+    @GetMapping("page")
     public ResponseEntity<PageResult<Brand>> queryBrandByPage(
             @RequestParam(value = "key",required = false) String key,
             @RequestParam(value = "page",defaultValue = "1") Integer page,
@@ -47,5 +48,14 @@ public class BrandController {
     public ResponseEntity<Void> saveBrand(Brand brand, @RequestParam("cids")List<Long> cids){
         this.brandService.saveBrand(brand, cids);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("cid/{cid}")
+    public ResponseEntity<List<Brand>> queryBrandByCid(@PathVariable("cid") Long cid){
+        List<Brand> brands = this.brandService.queryBrandsByCid(cid);
+        if (CollectionUtils.isEmpty(brands)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(brands);
     }
 }

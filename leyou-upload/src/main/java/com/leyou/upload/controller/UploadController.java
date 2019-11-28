@@ -18,6 +18,11 @@ public class UploadController {
     @Autowired
     private UploadService uploadService;
 
+    /**
+     * 图片上传
+     * @param file
+     * @return
+     */
     @PostMapping("image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file){
         String url = this.uploadService.upload(file);
