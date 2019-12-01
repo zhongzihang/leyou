@@ -19,6 +19,19 @@ public class SpecificationController {
 
 
     /**
+     * 根据cid查询规格组
+     * @param cid
+     * @return
+     */
+    @GetMapping("{cid}")
+    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid){
+        List<SpecGroup> list = this.specificationService.querySpecsByCid(cid);
+        if(list == null || list.size() == 0){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(list);
+    }
+    /**
      * 根据分类id Cid查询分组
      * @param cid
      * @return

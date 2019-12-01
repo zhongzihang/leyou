@@ -16,6 +16,12 @@ public class SpecificationService {
     @Autowired
     private SpecGroupMapper groupMapper;
 
+
+    @Autowired
+    private SpecParamMapper paramMapper;
+
+
+
     /**
      * 根据分类id查询分组
      * @param cid
@@ -26,8 +32,6 @@ public class SpecificationService {
         specGroup.setCid(cid);
         return this.groupMapper.select(specGroup);
     }
-    @Autowired
-    private SpecParamMapper paramMapper;
 
     /**
      * 根据相关参数查询规格参数
@@ -52,5 +56,14 @@ public class SpecificationService {
     public void saveSpecGroup(SpecGroup specGroup) {
         this.groupMapper.insertSelective(specGroup);
 
+    }
+    public List<SpecGroup> querySpecsByCid(Long cid) {
+        // 查询规格组
+        List<SpecGroup> groups = this.queryGroupsByCid(cid);
+        groups.forEach(g -> {
+            // 查询组内参数
+            g.setParams(this.queryParams(g.getId(), null, null, null));
+        });
+        return groups;
     }
 }
