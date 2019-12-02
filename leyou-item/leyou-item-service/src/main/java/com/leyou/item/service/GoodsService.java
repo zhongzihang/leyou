@@ -10,6 +10,9 @@ import com.leyou.item.pojo.Spu;
 import com.leyou.item.pojo.SpuDetail;
 import com.leyou.item.pojo.Stock;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,10 @@ public class GoodsService {
     private SpuDetailMapper spuDetailMapper;
     @Autowired
     private StockMapper stockMapper;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GoodsService.class);
 
     /**
      * 根据页面查询商品信息
@@ -88,6 +95,7 @@ public class GoodsService {
      * 新增商品
      * @param spuBo
      */
+    @Transactional
     public void saveGoods(SpuBo spuBo) {
         // 新增spu
         // 设置默认字段
@@ -104,6 +112,7 @@ public class GoodsService {
         this.spuDetailMapper.insertSelective(spuDetail);
 
         saveSkuAndStock(spuBo);
+        sendMessage(spuBo.getId(),"insert");
 
     }
 
@@ -183,9 +192,20 @@ public class GoodsService {
 
         // 更新spu详情
         this.spuDetailMapper.updateByPrimaryKeySelective(spu.getSpuDetail());
+        this.sendMessage(spu.getId(),"update");
     }
 
     public Spu querySpuById(Long id) {
         return this.spuMapper.selectByPrimaryKey(id);
+    }
+
+
+    private void sendMessage(Long id, String type){
+        // 发送消息
+        try {
+            this.amqpTemplate.convertAndSend("item." + type, id);
+        } catch (Exception e) {
+            LOGGER.error("{}商品消息发送异常，商品id：{}", type, id, e);
+        }
     }
 }

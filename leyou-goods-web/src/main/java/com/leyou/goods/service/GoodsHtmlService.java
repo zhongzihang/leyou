@@ -24,7 +24,7 @@ public class GoodsHtmlService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GoodsHtmlService.class);
 
     /**
-     * 创建html页面
+     * 创建html页面 private static final Logger LOGGER = LoggerFactory.getLogger(GoodsHtmlService.class);
      *
      * @param spuId
      * @throws Exception
@@ -68,5 +68,10 @@ public class GoodsHtmlService {
                 createHtml(spuId);
             }
         });*/
+    }
+
+    public void deleteHtml(Long id) {
+        File file = new File("E:\\javapro\\nginx-1.14.0\\html\\item\\", id + ".html");
+        file.deleteOnExit();
     }
 }
