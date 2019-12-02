@@ -208,4 +208,13 @@ public class GoodsService {
             LOGGER.error("{}商品消息发送异常，商品id：{}", type, id, e);
         }
     }
+
+    /**
+     * 购物车中查询sku
+     * @param id
+     * @return
+     */
+    public Sku querySkuById(Long id) {
+        return this.skuMapper.selectByPrimaryKey(id);
+    }
 }

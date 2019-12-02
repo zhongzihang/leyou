@@ -101,4 +101,18 @@ public class GoodsController {
         }
         return ResponseEntity.ok(spu);
     }
+
+    /**
+     * 购物车查询sku商品
+     * @param id
+     * @return
+     */
+    @GetMapping("sku/{id}")
+    public ResponseEntity<Sku> querySkuById(@PathVariable("id")Long id){
+        Sku sku = this.goodsService.querySkuById(id);
+        if (sku == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(sku);
+    }
 }
